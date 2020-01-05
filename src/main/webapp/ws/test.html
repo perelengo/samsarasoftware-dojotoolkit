@@ -1,0 +1,57 @@
+
+	
+
+<!-- page index -->
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title></title>
+<script type="text/javascript" src="../../allowedentityinheritance/lib/dojo/dojo/dojo.js" data-dojo-config="'parseOnLoad':false,'loginHandler':'samsarasoftware/layout/SingletonLoginHandler','async':true,'packages':[{'name':'samsarasoftware','location':'../samsarasoftware'},{'name':'gridx','location':'../gridx'}],'themeMap':[],'mblThemeFiles':[],'mblLoadCompatPattern':''"></script>
+<script type="text/javascript" src="../../allowedentityinheritance/lib/dojo/samsarasoftware/samsarasoftware.js"></script>
+<script type="text/javascript" src="lib/custom/utils.js" ></script>
+<script type="text/javascript">
+require([
+  "dijit/dijit",
+  "dojo/parser"
+]);
+/**
+
+**/
+</script>
+<script>
+
+	
+require(["dojo/ready","samsarasoftware/ws/WSDL2Client"], function(ready,WSDL2Client){
+	ready(function(){
+			var service=new WSDL2Client().processWSDL(dojo._getText("boatinformationservice.wsdl"));
+			var endpoint=service.services["BoatInformationService"].endpoints["Port1Endpoint"];
+			endpoint.options.address="http://localhost:18080/allowedentityinheritance/DAOComponent/";
+			var result=endpoint.stub.getBoatInfo({username:'pere', password:'joseph', boatid:1, loadAvailability:true,loadEquipment:true,loadExtras:true});
+			var processResult=function(result){
+				alert(result);
+			}
+			var processError=function(result){
+				alert("Error: "+result);
+			}
+			result.then(processResult,processError);
+	 });
+});	
+			
+</script>
+<style>@import "../../allowedentityinheritance/lib/dojo/themes/claro/document.css";@import "../../allowedentityinheritance/lib/dojo/themes/claro/claro.css";@import "../../allowedentityinheritance/lib/dojo/gridx/resources/claro/Gridx.css";@import "../../allowedentityinheritance/lib/dojo/gridx/resources/claro/Gridx_rtl.css";@import "../../allowedentityinheritance/lib/dojo/samsarasoftware/resources/SamsaraSoftware.css; @import "lib/custom/document.css;@import "lib/custom/theme.css";</style>
+		<style>@import "management/index/style/app_index.css";</style>
+		<script type="text/javascript" src="management/index/script/app_index.js"></script>
+</head>
+<body data-maq-flow-layout="true" data-maq-comptype="desktop" class="claro" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+
+
+
+</body>
+</html>
+

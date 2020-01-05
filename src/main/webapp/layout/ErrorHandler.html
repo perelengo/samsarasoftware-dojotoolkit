@@ -1,0 +1,21 @@
+<div id="${id}">
+<div data-dojo-type="dijit/Dialog"  data-dojo-attach-point="_dialog" style="display:none" title="Ha ocurrido un error mientras se procesaba la petici&oacute;n:&nbsp;">
+<div data-dojo-type="dijit/layout/ContentPane" style="width: auto; height: auto;padding:0px;margin:0px">
+<div data-dojo-type="dijit/layout/ContentPane" title="Pane" doLayout="false" style="width: auto; height: auto; background-color: #ff6432;">
+<div style="font-size: 14px; text-align: center;" >
+
+<div data-dojo-attach-point="_description"></div>
+<span data-dojo-attach-point="_hora"></span>
+</div>
+</div>
+<div data-dojo-type="dijit/TitlePane" title="Detalles de la llamada" data-dojo-attach-point="_clientTrace" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+</div>
+<div data-dojo-type="dijit/TitlePane" title="Detalles del servidor" data-dojo-attach-point="_serverTrace" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" duration="200" open="false" style="min-width: 1em; width: 100%; height: auto;">
+</div>
+<div style="text-align: center;">
+ <input type="button" data-dojo-type="dijit/form/Button" intermediateChanges="false" label="Cerrar" iconClass="dijitNoIcon" data-dojo-attach-event='onClick:hide'></input>
+ <input type="button" data-dojo-type="dijit/form/Button" data-dojo-attach-point="_retryButton" intermediateChanges="false" label="Volver a ejecutar" iconClass="dijitNoIcon" data-dojo-attach-event='onClick:retry' style="display:none"></input>
+</div>
+</div>
+</div>
+</div>
