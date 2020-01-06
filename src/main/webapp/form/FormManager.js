@@ -558,7 +558,7 @@ define([
 						if(window.I18n){
 							throw new Error("$i18n.mustSelectIte$");
 						}else{
-							throw new Error("Debe seleccionar algún registro.");
+							throw new Error("Debe seleccionar alg?n registro.");
 						}
 					}
 					
@@ -569,7 +569,7 @@ define([
 						if(window.I18n){
 							throw new Error("$i18n.mustSelectItem$");
 						}else{
-							throw new Error("Debe seleccionar algún registro.");
+							throw new Error("Debe seleccionar alg?n registro.");
 						}
 						return;
 					}else{

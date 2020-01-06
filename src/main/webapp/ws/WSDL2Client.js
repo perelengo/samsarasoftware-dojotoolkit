@@ -2,7 +2,7 @@
  * #%L
  * samsarasoftware-dojotoolkit
  * %%
- * Copyright (C) 2014 - 2019 Pere Joseph Rodriguez
+ * Copyright (C) 2014 - 2020 Pere Joseph Rodriguez
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -657,7 +657,7 @@ define('samsarasoftware/ws/WSDL2Client',
 										).replace(/[+]/g," ")
 										,temp[0]
 										,methodParamsXsd);
-									//finished expected path string ¿?
+									//finished expected path string ??
 									uriParsingPending.substring(uriParsingPending.indexOf("?"));
 								}else{
 									queryObject[temp[0]]=stringToXsdObject(
@@ -665,7 +665,7 @@ define('samsarasoftware/ws/WSDL2Client',
 										.replace(/[+]/g," ")
 										,temp[0]
 										,methodParamsXsd);
-									break; //finished expected path string ¿?
+									break; //finished expected path string ??
 								}
 							}else{
 								queryObject[temp[0]]=stringToXsdObject(
@@ -1260,8 +1260,8 @@ require(["dojox/rpc/Service",
 				
 				//with not found params:
 				//If the HTTP method used for the request does not allow a message body, then this query string is serialized as parameters in the request IRI (see 6.7.2.2.3 Serialization in the request IRI), otherwise it is serialized in the message body (see 6.7.2.2.4 Serialization in the message body).
-				//Si el método no admite body : GET, DELETE,...  se deben poner al final del la location con un ? en caso que no exista, y conversión ?param.name=param.value[separator]blabla
-				//si el método admite body, POST, PUT...  se crea una cadena de tipo "param.name=param.value[separator]blabla" y se mete en el body 
+				//Si el m?todo no admite body : GET, DELETE,...  se deben poner al final del la location con un ? en caso que no exista, y conversi?n ?param.name=param.value[separator]blabla
+				//si el m?todo admite body, POST, PUT...  se crea una cadena de tipo "param.name=param.value[separator]blabla" y se mete en el body 
 				if(method["whttp:ignoreUncited"]=="false"){
 					if(method["whttp:method"]=="GET" || method["whttp:method"]=="DELETE" ){
 						if(location.indexOf("?")==-1) 

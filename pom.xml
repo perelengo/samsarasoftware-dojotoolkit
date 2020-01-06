@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.samsarasoftware</groupId>
@@ -22,16 +23,34 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<version>1.12</version>
-				<configuration>
-					<inceptionYear>2014</inceptionYear>
-					<organizationName>Pere Joseph Rodriguez</organizationName>
-					<encoding>UTF-8</encoding>
-					<licenseName>apache_v2</licenseName>
-				</configuration>
+				<executions>
+					<execution>
+						<id>first</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<extraExtensions>
+								<ocl>java</ocl>
+								<uml>xml</uml>
+								<di>xml</di>
+								<notation>xml</notation>
+							</extraExtensions>
+							<licenseName>apache_v2</licenseName>
+							<roots>
+								<root>src</root>
+								<root>profiles</root>
+								<root>constraints</root>
+							</roots>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -47,7 +66,7 @@
 						<configuration>
 							<resources>
 								<resource>
-									<directory>${env.SAMSARASOFTWARE_WORKSPACE_DIR}/net.samsarasoftware/src/license/</directory>
+									<directory>${basedir}/../net.samsarasoftware/src/license/</directory>
 									<include>THIRD-PARTY.properties</include>
 									<filtering>true</filtering>
 								</resource>
@@ -57,7 +76,18 @@
 					</execution>
 				</executions>
 			</plugin>
-				</plugins>
-		
+		</plugins>
+
 	</build>
+
+	<scm>
+		<developerConnection>scm:git:git://github.com/perelengo/samsarasoftware-dojotoolkit.git</developerConnection>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>maven3.samsara-software.es</id>
+			<url>scpexe://maven3.samsara-software.es:22/home/samsara-software/domains/maven3.samsara-software.es/repository</url>
+		</repository>
+	</distributionManagement>
+
 </project>
