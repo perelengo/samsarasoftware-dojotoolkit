@@ -1136,20 +1136,31 @@ require(["dojox/rpc/Service",
 				var responseContentType=response.getHeader("content-type") ||response.getHeader("Content-Type") ||response.options.headers["Content-type"] ||response.options.headers["content-type"]  ;
 				var simplifiedContentType=(responseContentType.indexOf(";")==-1)?responseContentType.trim():responseContentType.substring(0,responseContentType.indexOf(";")).trim();
 				
-				if(endpoint._options.deserializerRegistry){
-					var mixin1={data:endpoint._options.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text)};
-					return dojo.mixin(dojo.mixin({},response),mixin1)
-				}else{
-					if(response.status>=200 && response.status<300){
-						var mixin1={data:samsarasoftware.ws.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text)};
-						return dojo.mixin(dojo.mixin({},response),mixin1);
-
+				try{
+					if(endpoint._options.deserializerRegistry){
+						var mixin1={data:endpoint._options.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text)};
+						return dojo.mixin(dojo.mixin({},response),mixin1)
+					
 					}else{
-						var err=new Error(response.message);
-						var httpResponse=samsarasoftware.ws.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text);
-						err._httpResponseObject=httpResponse;
-						err._httpResponse=response;
-						throw err;
+						if(response.status>=200 && response.status<300){
+							var mixin1={data:samsarasoftware.ws.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text)};
+							return dojo.mixin(dojo.mixin({},response),mixin1);
+	
+						}else{
+							var err=new Error(response.message);
+							var httpResponse=samsarasoftware.ws.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text);
+							err._httpResponseObject=httpResponse;
+							err._httpResponse=response;
+							throw err;
+						}
+					}
+				}catch(e){
+					//default callback for unhandled content types
+					if(e.getMessage=="No match found"){
+						var mixin1={data:response.text};
+						return dojo.mixin(dojo.mixin({},response),mixin1);
+					}else{
+						throw e;
 					}
 				}
 			},
@@ -1413,18 +1424,7 @@ require(["dojox/rpc/Service",
 		}
 	);
 
-	//Gestionamos respuestas que no sean JSON ni XML
-	samsarasoftware.ws.deserializerRegistry.register(
-		"text/html",
-		function(str){ return str == "text/html"; },
-		{
-			deserialize: function(contentType,data){
-				var err=new Error("Unexpected error");
-				err._httpResponseObject={text:data};
-				throw err;
-			}
-		}
-	);
+
 	
 	samsarasoftware.jsonrpc.transportRegistry.register(
 		"POST",
