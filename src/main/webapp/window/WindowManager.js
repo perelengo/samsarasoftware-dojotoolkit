@@ -36,21 +36,48 @@ define('samsarasoftware/window/WindowManager',[
 		
 		
 		return {
-			show: function (panelId,containerId){					
-				var container=(containerId)?dijit.byId(containerId):null;
+			findParentTabContainer: function(panel){
+				if(panel.parentNode){
+					if(panel.parentNode.classList && panel.parentNode.classList.contains("dijitTabContainer"))
+						return panel.parentNode;
+					else
+						return this.findParentTabContainer(panel.parentNode);
+				}else{
+					return null;
+				}
+			},
+			
+			findParentAccordionContainer: function(panel){
+				return this.findParentWithAttributeValue(panel,"data-dojo-type","dijit/layout/AccordionContainer");
+			},
+			
+			findParentWithAttributeValue: function(panel, attributeName, attributeValue){
+				if(panel.parentNode){
+					if(panel.parentNode.getAttribute && panel.parentNode.getAttribute(attributeName)==attributeValue)
+						return panel.parentNode;
+					else
+						return this.findParentWithAttributeValue(panel.parentNode, attributeName,attributeValue);
+				}else{
+					return null;
+				}
+			},
+			
+			show: function (panelId){					
 				var panel=dijit.byId(panelId);
+				var tabContainer=this.findParentTabContainer(panel.domNode);
+				var accordionContainer=this.findParentAccordionContainer(panel.domNode);
 				
 					
-				if(containerId && (container instanceof TabContainer
-									|| container instanceof AccordionContainer)
-				){ 
+				if(tabContainer || accordionContainer || window[panelId+"_container"]){ 
+					var containerDom=tabContainer || accordionContainer || window[panelId+"_container"];
+					var container=dijit.byId(containerDom.id);
 					container.domNode.style.display = 'block';
 					if(window[panelId+"_temp"]){
 						container.addChild(window[panelId+"_temp"]);
 					};
 					panel.style.display='block';
 					container.selectChild(dijit.byId(panelId),true);
-					container.resize();
+					//container.resize(); //si se invoca, sedescuadran los elementos. Parece que provoca el contrario del efecto deseado.
 					delete window[panelId+"_temp"];
 				}else if(panel instanceof Dialog){
 					panel.show();
@@ -62,18 +89,21 @@ define('samsarasoftware/window/WindowManager',[
 					panel.resize();
 				}else{
 					panel.domNode.style.display = 'block';
-					panel.resize();
+					if(panel.resize)
+						panel.resize();
 				}
 			}
 			
 			,hide: function(panelId,containerId){
-				var container=(containerId)?dijit.byId(containerId):null;
 				var panel=dijit.byId(panelId);
+				var tabContainer=this.findParentTabContainer(panel.domNode);
+				var accordionContainer=this.findParentAccordionContainer(panel.domNode);
 				
-				if(containerId && (container instanceof TabContainer
-									|| container instanceof AccordionContainer)
-				){
+				if(tabContainer || accordionContainer){ 
+					var containerDom=tabContainer || accordionContainer;
+					var container=dijit.byId(containerDom.id);
 					window[panelId+"_temp"]=panel;
+					window[panelId+"_container"]=container.domNode;
 					container.removeChild(window[panelId+"_temp"],true);
 					if(!container.hasChildren()){
 						container.domNode.style.display = 'none';

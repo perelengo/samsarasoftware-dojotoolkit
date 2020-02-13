@@ -23,7 +23,7 @@ limitations under the License.
 	background-position: center;
 	top : 0;
     left : 0;
-    position : absolute;
+    position : fixed;
     height : 100%;
     width : 100%;
     z-index : 900;
