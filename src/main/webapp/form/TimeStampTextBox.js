@@ -26,12 +26,17 @@ require(["dojo/_base/declare", "dijit/form/DateTextBox", "dojo/dom"],
             return dateObject.toISOString();
         },
 		_setValueAttr: function(/*Date|String*/ value, /*Boolean?*/ priorityChange, /*String?*/ formattedValue){
-			var now=new Date();
-			value.setUTCHours(now.getUTCHours());
-			value.setUTCMinutes(now.getUTCMinutes());
-			value.setUTCSeconds(now.getUTCSeconds());
-			value.setUTCMilliseconds(now.getUTCMilliseconds());
-			return this.inherited(arguments);
+			if(value!=null){
+				var now=new Date();
+				var copy=new Date(value.getTime());
+				value.setUTCFullYear(copy.getUTCFullYear());
+				value.setUTCMonth(copy.getUTCMonth(),copy.getUTCDate()+1);
+				value.setUTCHours(now.getUTCHours());
+				value.setUTCMinutes(now.getUTCMinutes());
+				value.setUTCSeconds(now.getUTCSeconds());
+				value.setUTCMilliseconds(now.getUTCMilliseconds());
+				return this.inherited(arguments);
+			}
 		}
     });
     
