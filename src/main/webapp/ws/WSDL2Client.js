@@ -292,7 +292,6 @@ define('samsarasoftware/ws/WSDL2Client',
 		_getJsonRpcRequest: function _getRequest(method,endpoint,args){
 			var protocolVersion=(endpoint.binding["wjsonrpc:protocol-version"] || "2.0");
 			var envDef = samsarasoftware.jsonrpc.envelopeRegistry.match("JSON-RPC-"+protocolVersion);
-			var methodParamsXsd=self.getTypeHierarchyAttributes(method.messages["wsdl:input"][0].type);
 			
 			//FIXME Pendiente de terminar
 			var method2={"name":self.removeNamespace(method.name)};
@@ -345,7 +344,7 @@ define('samsarasoftware/ws/WSDL2Client',
 			}else{
 				if(type.children[0].localName.toLowerCase()=="complexcontent"){
 					var res=new Array();
-					res.concat(type.children[0].children[0].children[0].children);
+					res=res.concat(type.children[0].children[0].children[0].children);
 					var parentName=type.children[0].children[0].getAttribute("base");
 					
 					var nsResolver2 = document.createNSResolver( description.ownerDocument == null ? description.documentElement : description.ownerDocument.documentElement );
@@ -357,7 +356,7 @@ define('samsarasoftware/ws/WSDL2Client',
 					
 					
 					var parentType=elementReference;
-					res.concat(self.getTypeHierarchyAttributes(parentType));
+					res=res.concat(self.getTypeHierarchyAttributes(parentType));
 					return res;
 				}else{
 					throw new Error("Unsupported element: "+type.children[0]);
@@ -412,8 +411,15 @@ define('samsarasoftware/ws/WSDL2Client',
 				
 			var methodMessagesXsd=self.getTypeHierarchyAttributes(method.messages["wsdl:input"][0].type,self.description);
 			if(methodMessagesXsd.length>0){
-				var methodMessagesXsdType=self.getComplexType(methodMessagesXsd[0].getAttribute("type"),self.description);
-				var methodParamsXsd= methodMessagesXsdType.children[0].children;
+					
+				var methodParamsXsd=null; 
+				if(self.isPrimaryType(methodMessagesXsd[0].getAttribute("type"))){
+					methodParamsXsd=methodMessagesXsd;
+				}else{
+					var methodMessagesXsdType=self.getComplexType(methodMessagesXsd[0].getAttribute("type"),self.description);;
+					methodParamsXsd=methodMessagesXsdType.children[0].children;
+				}
+				
 				
 				for(var j=0;j<args2.length;j++){
 					if((args2[j].length==1) && dojo.isObject(args2[j])){
@@ -769,6 +775,28 @@ define('samsarasoftware/ws/WSDL2Client',
 						return null;
 					}
 		},
+		isPrimaryType:function(xsdType){
+			if(xsdType=="xs:string"){
+				return true;					
+			}else if(xsdType=="xs:integer"){
+				return true;
+			}else if(xsdType=="xs:long"){
+				return true;
+			}else if(xsdType=="xs:decimal"){
+				return true;
+			}else if(xsdType=="xs:boolean"){
+				return true;
+			}else if(xsdType=="xs:dateTime"){
+				return true;
+			}else if(xsdType=="xs:date"){
+				return true;
+			}else if(xsdType=="xs:base64Binary"){
+				return true;
+			}else{			
+				return false;
+			}
+		},
+
 		processBindingOperationHttpHeaders: function (messages){
 			messages;
 		},
