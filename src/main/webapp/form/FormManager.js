@@ -503,7 +503,7 @@ define([
 								content.children[i].setAttribute("data-dojo-props",propsAttr.substring(1,propsAttr.length-1));
 								
 							}else{
-								content.children[i].innerHTML=results[row][content.children[i].id];
+								content.children[i].innerHTML=results[row][content.children[i].id].replace(/</,"&lt;").replace(/>/,"&gt;");
 							}
 							content.children[i].id=targetElem.id+"_"+content.children[i].id+"_"+row;
 						}else{
@@ -517,8 +517,8 @@ define([
 							}
 						}
 					}
-			};	
-			FormManagerClass.prototype.templateToJson= function(rowElement){
+		};
+		FormManagerClass.prototype.templateToJson= function(rowElement){
 			var obj={};
 			this.recursiveTemplateToJson(rowElement,obj);
 			return obj;
