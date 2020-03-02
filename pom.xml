@@ -21,44 +21,50 @@
 		</license>
 	</licenses>
 
-	<build>
-		<plugins>
+	<profiles>
+		<profile>
+			<id>refresh-licenses</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>3.0.2</version>
+						<executions>
+							<execution>
+								<id>copy licenses</id>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<phase>generate-resources</phase>
+								<configuration>
+									<resources>
+										<resource>
+											<directory>${basedir}/../net.samsarasoftware/src/license/</directory>
+											<include>THIRD-PARTY.properties</include>
+											<filtering>true</filtering>
+										</resource>
+									</resources>
+									<outputDirectory>src/license</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<id>copy licenses</id>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>${basedir}/../net.samsarasoftware/src/license/</directory>
-									<include>THIRD-PARTY.properties</include>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-							<outputDirectory>src/license</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-
-	</build>
-
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<scm>
-		<developerConnection>scm:git:git://github.com/perelengo/samsarasoftware-dojotoolkit.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/perelengo/samsara-software-dojotoolkit.git</developerConnection>
 	</scm>
 	<distributionManagement>
 		<repository>
 			<id>maven3.samsara-software.es</id>
-			<url>scpexe://maven3.samsara-software.es:22/home/samsara-software/domains/maven3.samsara-software.es/repository</url>
+			<url>scpexe://maven3.samsara-software.es:22/home/maven3/www/public_html/repository</url>
 		</repository>
 	</distributionManagement>
 
