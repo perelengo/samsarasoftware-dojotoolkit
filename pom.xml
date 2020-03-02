@@ -58,7 +58,7 @@
 		</profile>
 	</profiles>
 	<scm>
-		<developerConnection>scm:git:https://github.com/perelengo/samsara-software-dojotoolkit.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/perelengo/samsarasoftware-dojotoolkit.git</developerConnection>
 	  <tag>samsarasoftware-dojotoolkit-0.2.0</tag>
   </scm>
 	<distributionManagement>
