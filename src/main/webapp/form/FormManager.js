@@ -660,12 +660,16 @@ define([
 			if(!controller.extendedProperty) controller.extendedProperty={};
 			controller.extendedProperty[formName]=propertyName;
 			controller.lastExtendedProperty=propertyName;
+			controller.lastExtendedFormName=formName;
 		};
 		FormManagerClass.prototype.getFormExtendedProperty= function(controller,formName){
 			return controller.extendedProperty[formName];
 		};
 		FormManagerClass.prototype.getLastExtendedProperty=function(controller){
 			return controller.lastExtendedProperty;
+		}
+		FormManagerClass.prototype.getLastExtendedForm=function(controller){
+			return controller.lastExtendedFormName;
 		}
 				
 		
