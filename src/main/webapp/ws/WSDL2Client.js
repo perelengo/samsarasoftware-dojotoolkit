@@ -398,7 +398,35 @@ define('samsarasoftware/ws/WSDL2Client',
 			}
 			return out;
 		},
-		
+		getHierarchicalAttributes: function(methodMessagesXsdType	){
+			
+					if(methodMessagesXsdType.children[0].children[0].localName=='extension'){
+						var tempParams=new Array();
+						
+						var currentAttributes=methodMessagesXsdType.children[0].children[0].children[0].children;
+						for(var i=0;i<currentAttributes.length;i++)
+						tempParams.push(currentAttributes[i]); //self attributes	
+						
+						var extensionMessagesXsdType=self.getComplexType(methodMessagesXsdType.children[0].children[0].getAttribute("base"),self.description);
+						var extendedAttributes=self.getHierarchicalAttributes(extensionMessagesXsdType);
+						for(var i=0;i<extendedAttributes.length;i++){
+							//skip duplicated attributes of general classes.
+							var found=false;
+							for(var j=0;j<currentAttributes.length;j++){
+								if(self.removeNamespace(currentAttributes[j].attributes["name"].value)==self.removeNamespace(extendedAttributes[i].attributes["name"].value))
+									found=true;
+							}
+							if(!found)
+								tempParams.push(extendedAttributes[i]);
+
+						}
+						
+						methodParamsXsd=tempParams;
+					}else{
+						methodParamsXsd=methodMessagesXsdType.children[0].children;
+					}
+					return methodParamsXsd;
+		},
 		_getRequest2: function (method,endpoint, args){
 			// the serializer is expecting named params
 			var args2=new Array();
@@ -417,7 +445,7 @@ define('samsarasoftware/ws/WSDL2Client',
 					methodParamsXsd=methodMessagesXsd;
 				}else{
 					var methodMessagesXsdType=self.getComplexType(methodMessagesXsd[0].getAttribute("type"),self.description);;
-					methodParamsXsd=methodMessagesXsdType.children[0].children;
+					methodParamsXsd=self.getHierarchicalAttributes(methodMessagesXsdType);
 				}
 				
 				
@@ -1175,11 +1203,17 @@ require(["dojox/rpc/Service",
 							return dojo.mixin(dojo.mixin({},response),mixin1);
 	
 						}else{
-							var err=new Error(response.message);
-							var httpResponse=samsarasoftware.ws.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text);
-							err._httpResponseObject=httpResponse;
-							err._httpResponse=response;
-							throw err;
+							if(responseContentType!="text/plain"){
+								var err=new Error(response.message);
+								var httpResponse=samsarasoftware.ws.deserializerRegistry.match(simplifiedContentType).deserialize(responseContentType, response.text);
+								err._httpResponseObject=httpResponse;
+								err._httpResponse=response;
+								throw err;
+							}else{
+								var err=new Error(response.text);
+								throw err;
+							}
+							
 						}
 					}
 				}catch(e){
@@ -1424,6 +1458,20 @@ require(["dojox/rpc/Service",
 		}
 	);	
 	
+	samsarasoftware.ws.deserializerRegistry.register(
+		"text/plain",
+		function(str){ return str == "text/plain"; },
+		{
+			deserialize: function(contentType,data){
+				try{
+					return data;
+				}catch(e){
+					return e;
+				}
+			}
+		}
+	);
+
 	samsarasoftware.ws.deserializerRegistry.register(
 		"application/json",
 		function(str){ return str == "application/json"; },
